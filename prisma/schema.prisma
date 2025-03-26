@@ -1,0 +1,140 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id Int @id @default(autoincrement())
+  firstName String 
+  lastName String
+  phone String @unique
+  email String? @unique
+  address String?
+  birthDate DateTime?
+  role Role @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  @@map("users")
+}
+
+enum Role{
+  USER
+  ADMIN
+}
+
+model NewsTag {
+  newsId  Int
+  tagId   Int
+  news    News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  tag     Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([newsId, tagId]) // کلید ترکیبی برای جلوگیری از داده‌های تکراری
+  @@map("news_tags") // تغییر نام جدول در دیتابیس
+}
+
+model News {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  imageUrl  String?
+  tags      NewsTag[] // ارتباط چند به چند از طریق جدول میانی
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("news") // نام جدول در دیتابیس
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  news      NewsTag[] // ارتباط چند به چند از طریق جدول میانی
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("tags") // نام جدول در دیتابیس
+}
+
+
+model Team {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  // ارتباطات با مسابقات
+  homeMatches Match[] @relation("HomeTeam")
+  awayMatches Match[] @relation("AwayTeam")
+
+  @@map("teams")
+}
+
+model Match {
+  id         Int      @id @default(autoincrement())  
+  homeTeamId Int  
+  awayTeamId Int  
+  date       DateTime  // تاریخ برگزاری مسابقه
+  scoreHome  Int?      // گل‌های تیم میزبان
+  scoreAway  Int?      // گل‌های تیم مهمان
+  createdAt  DateTime  @default(now())
+
+  // ارتباط با تیم‌ها
+  homeTeam   Team  @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam   Team  @relation("AwayTeam", fields: [awayTeamId], references: [id])
+
+  @@map("matches")
+}
+
+model Slider{
+  id Int @id @default(autoincrement())
+  imageUrl String
+  link String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  @@map("sliders")
+}
+
+model Video{
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  url String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  @@map("videos")
+}
+
+model Player{
+  id Int @id @default(autoincrement())
+  firstname String
+  lastname String
+  shirtNumber  Int?
+  imageUrl String?
+  ageGroup AgeGroup
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  @@map("players")
+}
+
+enum AgeGroup {
+  youth
+  junior
+  adult
+}
