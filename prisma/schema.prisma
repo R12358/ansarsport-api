@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Prisma Schema
 
 generator client {
   provider = "prisma-client-js"
@@ -13,128 +9,195 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  firstName String 
-  lastName String
-  phone String @unique
-  email String? @unique
-  address String?
-  birthDate DateTime?
-  role Role @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
+enum Role {
+  ADMIN
+  WRITER
+  MANAGER
+  MEMBER
+}
+
+enum AgeGroup {
+  NOBAVEGAN
+  NONEHALAN
+  NOJAVANAN
+  JAVANAN
+  BOZORGSALAN
+  KADRE_FANNI
+}
+
+enum MatchType {
+  PREVIOUS
+  UPCOMING
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  password    String
+  role        Role
+  avatarUrl   String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?   
+  lastLogin   DateTime?
+
+  member      Member?   @relation("UserToMember")
+
+  @@index([deletedAt])
   @@map("users")
 }
 
-enum Role{
-  USER
-  ADMIN
+model Member {
+  id             Int         @id @default(autoincrement())
+  fullName       String
+  imageUrl       String?
+  jerseyNumber   Int?
+  ageGroup       AgeGroup?
+  positionId     Int
+  position       Position    @relation(fields: [positionId], references: [id])
+  user           User        @relation("UserToMember", fields: [userId], references: [id])
+  userId         Int         @unique
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?   
+
+  @@index([deletedAt])
+  @@map("members")
 }
 
-model NewsTag {
-  newsId  Int
-  tagId   Int
-  news    News @relation(fields: [newsId], references: [id], onDelete: Cascade)
-  tag     Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+model Position {
+  id         Int       @id @default(autoincrement())
+  title      String    @unique
+  members    Member[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  @@id([newsId, tagId]) // کلید ترکیبی برای جلوگیری از داده‌های تکراری
-  @@map("news_tags") // تغییر نام جدول در دیتابیس
+  @@map("positions")
 }
 
 model News {
-  id        Int       @id @default(autoincrement())
-  title     String
-  content   String
-  imageUrl  String?
-  tags      NewsTag[] // ارتباط چند به چند از طریق جدول میانی
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id             Int          @id @default(autoincrement())
+  title          String
+  description    String?
+  content        String
+  imageUrl       String
+  publishedAt    DateTime
+  viewCount      Int          @default(0)
+  isFeatured     Boolean      @default(false)
+  isHighlighted  Boolean      @default(false)
+  isTopNews      Boolean      @default(false)
+  tags Tag[]                  @relation("NewsTags")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?    
 
-  @@map("news") // نام جدول در دیتابیس
+  @@index([deletedAt])
+  @@map("news")
 }
 
 model Tag {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  news      NewsTag[] // ارتباط چند به چند از طریق جدول میانی
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  news       News[]  @relation("NewsTags")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  @@map("tags") // نام جدول در دیتابیس
+  @@map("tags")
 }
 
+model Video {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String?
+  videoUrl       String
+  thumbnailUrl   String
+  publishedAt    DateTime
+  viewCount      Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime? 
+
+  @@index([deletedAt])
+  @@map("videos")
+}
+
+model Gallery {
+  id             Int             @id @default(autoincrement())
+  title          String
+  description    String?
+  coverImageUrl  String?
+  publishedAt    DateTime
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?       
+  images         GalleryImage[]
+
+  @@index([deletedAt])
+  @@map("galleries")
+}
+
+model GalleryImage {
+  id         Int       @id @default(autoincrement())
+  galleryId  Int
+  imageUrl   String
+  caption    String?
+  order      Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  gallery    Gallery   @relation(fields: [galleryId], references: [id])
+
+  @@map("gallery_images")
+}
+
+model Slider {
+  id             Int       @id @default(autoincrement())
+  imageUrl       String
+  linkUrl        String
+  title          String?
+  description    String?
+  order          Int       @default(0)
+  isActive       Boolean   @default(true)
+  publishedAt    DateTime
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime? 
+
+  @@map("sliders")
+  @@index([deletedAt])
+  @@index([order])
+}
 
 model Team {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  logo      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-
-  // ارتباطات با مسابقات
-  homeMatches Match[] @relation("HomeTeam")
-  awayMatches Match[] @relation("AwayTeam")
+  id           Int        @id @default(autoincrement())
+  name         String     @unique
+  logoUrl      String?
+  isMainTeam   Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  homeMatches  Match[]    @relation("HomeTeam")
+  awayMatches  Match[]    @relation("AwayTeam")
 
   @@map("teams")
 }
 
 model Match {
-  id         Int      @id @default(autoincrement())  
-  homeTeamId Int  
-  awayTeamId Int  
-  date       DateTime  // تاریخ برگزاری مسابقه
-  scoreHome  Int?      // گل‌های تیم میزبان
-  scoreAway  Int?      // گل‌های تیم مهمان
-  createdAt  DateTime  @default(now())
+  id           Int        @id @default(autoincrement())
+  homeTeamId   Int
+  awayTeamId   Int
+  matchDate    DateTime
+  matchType    MatchType
+  homeScore    Int?
+  awayScore    Int?
+  location     String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
-  // ارتباط با تیم‌ها
-  homeTeam   Team  @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam   Team  @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  homeTeam     Team       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team       @relation("AwayTeam", fields: [awayTeamId], references: [id])
 
   @@map("matches")
-}
-
-model Slider{
-  id Int @id @default(autoincrement())
-  imageUrl String
-  link String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  @@map("sliders")
-}
-
-model Video{
-  id Int @id @default(autoincrement())
-  title String
-  description String?
-  url String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  @@map("videos")
-}
-
-model Player{
-  id Int @id @default(autoincrement())
-  firstname String
-  lastname String
-  shirtNumber  Int?
-  imageUrl String?
-  ageGroup AgeGroup
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-  @@map("players")
-}
-
-enum AgeGroup {
-  youth
-  junior
-  adult
+  @@index([matchDate])
 }
