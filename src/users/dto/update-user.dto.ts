@@ -12,7 +12,7 @@ import {
 import { Type, Transform } from 'class-transformer';
 import { Role } from '@prisma/client';
 
-export class CreateUserDto {
+export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   firstName: string;

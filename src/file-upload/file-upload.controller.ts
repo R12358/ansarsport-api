@@ -5,72 +5,77 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { v4 as uuidv4 } from 'uuid';
-import { extname } from 'path';
+import { FileUploadService } from './file-upload.service';
 
 @Controller('file-upload')
 export class FileUploadController {
-  // Helper method for generating multer storage
-  private static createMulterStorage(folder: string) {
-    return diskStorage({
-      destination: `./uploads/${folder}`,
-      filename: (req, file, callback) => {
-        const uniqueSuffix = `${uuidv4()}${extname(file.originalname)}`;
-        callback(null, uniqueSuffix);
-      },
-    });
-  }
+  constructor(private readonly fileUploadService: FileUploadService) {}
 
   @Post('slider')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: FileUploadController.createMulterStorage('sliders'),
+      storage: new FileUploadService().getMulterStorage('sliders'),
     }),
   )
   uploadSliderImage(@UploadedFile() file: Express.Multer.File) {
+    const filePath = this.fileUploadService.generateFilePath(
+      'sliders',
+      file.filename,
+    );
     return {
       message: 'Slider image uploaded successfully',
-      filePath: `/uploads/sliders/${file.filename}`,
+      filePath,
     };
   }
 
   @Post('team')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: FileUploadController.createMulterStorage('team'),
+      storage: new FileUploadService().getMulterStorage('team'),
     }),
   )
   uploadTeamImage(@UploadedFile() file: Express.Multer.File) {
+    const filePath = this.fileUploadService.generateFilePath(
+      'team',
+      file.filename,
+    );
     return {
       message: 'Team image uploaded successfully',
-      filePath: `/uploads/team/${file.filename}`,
+      filePath,
     };
   }
 
   @Post('news')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: FileUploadController.createMulterStorage('news'),
+      storage: new FileUploadService().getMulterStorage('news'),
     }),
   )
   uploadNewsImage(@UploadedFile() file: Express.Multer.File) {
+    const filePath = this.fileUploadService.generateFilePath(
+      'news',
+      file.filename,
+    );
     return {
       message: 'News image uploaded successfully',
-      filePath: `/uploads/news/${file.filename}`,
+      filePath,
     };
   }
 
   @Post('gallery')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: FileUploadController.createMulterStorage('gallery'),
+      storage: new FileUploadService().getMulterStorage('gallery'),
     }),
   )
   uploadGalleryImage(@UploadedFile() file: Express.Multer.File) {
+    const filePath = this.fileUploadService.generateFilePath(
+      'gallery',
+      file.filename,
+    );
     return {
       message: 'Gallery image uploaded successfully',
-      filePath: `/uploads/gallery/${file.filename}`,
+      filePath,
     };
   }
 }
