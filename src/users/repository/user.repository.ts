@@ -7,15 +7,53 @@ import { User, Prisma } from '@prisma/client';
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateUserDto): Promise<User> {
-    return this.prisma.user.create({
+  async create(data: CreateUserDto) {
+    return this.prisma.user.create({ data });
+  }
+
+  async findUserById(id: number): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
+  }
+
+  async findUserByPhoneNumber(phoneNumber: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { phoneNumber },
+    });
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
+
+  async findAll() {
+    return this.prisma.user.findMany({ where: { deletedAt: null } });
+  }
+
+  async findOne(id: number) {
+    return this.prisma.user.findFirst({
+      where: {
+        id,
+        deletedAt: null,
+      },
+    });
+  }
+
+  async update(id: number, updateUserDto: Partial<CreateUserDto>) {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
+  }
+
+  async remove(id: number) {
+    return this.prisma.user.update({
+      where: { id },
       data: {
-        firstName: dto.firstName,
-        lastName: dto.lastName,
-        email: dto.email,
-        password: dto.password,
-        avatarUrl: dto.avatarUrl,
-        role: dto.role,
+        deletedAt: new Date(),
       },
     });
   }
