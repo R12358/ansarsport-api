@@ -16,6 +16,25 @@ export class UsersService {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  async create(createUserDto: CreateUserDto, avatarFile?: Express.Multer.File) {
+    // بررسی اینکه آیا ایمیل قبلاً در دیتابیس وجود دارد
+    const emailExists = await this.checkUserExists(createUserDto.email);
+    const phoneExists = await this.checkUserByPhoneNumber(
+      createUserDto.phoneNumber,
+    );
+
+    if (phoneExists) {
+      throw new ConflictException('این شماره همراه قبلاً ثبت شده است.');
+    }
+
+    if (emailExists) {
+      throw new ConflictException('این ایمیل قبلاً ثبت شده است.');
+    }
+
+    // اگر ایمیل تکراری نباشد، کاربر جدید ساخته می‌شود
+    return this.repo.create(createUserDto);
+  }
+
   private async findUserOrFail(id: number) {
     const user = await this.repo.findOne(id);
     if (!user) {
@@ -60,25 +79,6 @@ export class UsersService {
   private async checkUserByPhoneNumber(phoneNumber: string): Promise<boolean> {
     const user = await this.repo.findUserByPhoneNumber(phoneNumber);
     return !!user;
-  }
-
-  async create(createUserDto: CreateUserDto, avatarFile?: Express.Multer.File) {
-    // بررسی اینکه آیا ایمیل قبلاً در دیتابیس وجود دارد
-    const emailExists = await this.checkUserExists(createUserDto.email);
-    const phoneExists = await this.checkUserByPhoneNumber(
-      createUserDto.phoneNumber,
-    );
-
-    if (phoneExists) {
-      throw new ConflictException('این شماره همراه قبلاً ثبت شده است.');
-    }
-
-    if (emailExists) {
-      throw new ConflictException('این ایمیل قبلاً ثبت شده است.');
-    }
-
-    // اگر ایمیل تکراری نباشد، کاربر جدید ساخته می‌شود
-    return this.repo.create(createUserDto);
   }
 
   async findAll() {
