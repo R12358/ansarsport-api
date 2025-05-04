@@ -6,9 +6,10 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { MembersModule } from './members/members.module';
 import { PositionsModule } from './positions/positions.module';
 import { NewsModule } from './news/news.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
-  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule],
+  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule, TagsModule],
   controllers: [AppController],
   providers: [AppService],
 })
