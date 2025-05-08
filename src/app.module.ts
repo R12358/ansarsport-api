@@ -9,9 +9,10 @@ import { NewsModule } from './news/news.module';
 import { TagsModule } from './tags/tags.module';
 import { VideosModule } from './videos/videos.module';
 import { GalleriesModule } from './galleries/galleries.module';
+import { SlidersModule } from './sliders/sliders.module';
 
 @Module({
-  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule, TagsModule, VideosModule, GalleriesModule],
+  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule, TagsModule, VideosModule, GalleriesModule, SlidersModule],
   controllers: [AppController],
   providers: [AppService],
 })
