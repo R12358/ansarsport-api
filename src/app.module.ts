@@ -11,9 +11,10 @@ import { VideosModule } from './videos/videos.module';
 import { GalleriesModule } from './galleries/galleries.module';
 import { SlidersModule } from './sliders/sliders.module';
 import { TeamsModule } from './teams/teams.module';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
-  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule, TagsModule, VideosModule, GalleriesModule, SlidersModule, TeamsModule],
+  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule, TagsModule, VideosModule, GalleriesModule, SlidersModule, TeamsModule, MatchesModule],
   controllers: [AppController],
   providers: [AppService],
 })
