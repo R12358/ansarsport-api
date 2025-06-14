@@ -9,10 +9,10 @@ export class UpdateTeamDto {
   logoUrl?: string;
 
   @IsOptional()
-  @IsBoolean()
   @Transform(
     ({ value }) =>
       value === 'true' || value === true || value === 1 || value === '1',
   )
+  @IsBoolean()
   isMainTeam?: boolean;
 }

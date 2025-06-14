@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -19,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import * as path from 'path';
+import { News } from '@prisma/client';
 
 @Controller('news')
 export class NewsController {
@@ -56,8 +58,16 @@ export class NewsController {
   }
 
   @Get()
-  async findAll() {
-    return this.newsService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<{ news: News[]; totalPages: number }> {
+    return this.newsService.findAllPaginated({
+      search,
+      page: +page,
+      limit: +limit,
+    });
   }
 
   @Get(':id')

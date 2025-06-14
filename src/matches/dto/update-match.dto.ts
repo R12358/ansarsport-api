@@ -4,9 +4,11 @@ import { MatchType } from '@prisma/client';
 
 export class UpdateMatchDto {
   @IsInt()
+  @Type(() => Number)
   homeTeamId: number;
 
   @IsInt()
+  @Type(() => Number)
   awayTeamId: number;
 
   @Type(() => Date) // تبدیل خودکار به Date
@@ -18,10 +20,12 @@ export class UpdateMatchDto {
 
   @IsOptional()
   @IsInt()
+  @Type(() => Number)
   homeScore?: number;
 
   @IsOptional()
   @IsInt()
+  @Type(() => Number)
   awayScore?: number;
 
   @IsOptional()

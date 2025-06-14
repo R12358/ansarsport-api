@@ -6,10 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
+import { Member } from '@prisma/client';
 
 @Controller('members')
 export class MembersController {
@@ -21,8 +23,16 @@ export class MembersController {
   }
 
   @Get()
-  async findAll() {
-    return this.memberService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<{ members: Member[]; totalPages: number }> {
+    return this.memberService.findAllPaginated({
+      search,
+      page: +page,
+      limit: +limit,
+    });
   }
 
   @Get(':id')

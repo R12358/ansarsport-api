@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import { UpdateTeamDto } from '../dto/update-team.dto';
@@ -15,8 +15,20 @@ export default class TeamRepository {
     return this.prisma.team.findMany();
   }
 
-  async findOne(id: number) {
+  async findUnique(id: number) {
     return this.prisma.team.findUnique({ where: { id } });
+  }
+
+  async findFirst(id: number) {
+    return this.prisma.team.findFirst({ where: { id } });
+  }
+
+  async usedInMatch(id: number) {
+    return this.prisma.match.findFirst({
+      where: {
+        OR: [{ homeTeamId: id }, { awayTeamId: id }],
+      },
+    });
   }
 
   async update(id: number, updateTeamDto: UpdateTeamDto) {

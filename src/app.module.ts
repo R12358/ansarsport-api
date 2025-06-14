@@ -12,9 +12,31 @@ import { GalleriesModule } from './galleries/galleries.module';
 import { SlidersModule } from './sliders/sliders.module';
 import { TeamsModule } from './teams/teams.module';
 import { MatchesModule } from './matches/matches.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { GalleryImagesModule } from './gallery-images/gallery-images.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, FileUploadModule, MembersModule, PositionsModule, NewsModule, TagsModule, VideosModule, GalleriesModule, SlidersModule, TeamsModule, MatchesModule],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
+    UsersModule,
+    FileUploadModule,
+    MembersModule,
+    PositionsModule,
+    NewsModule,
+    TagsModule,
+    VideosModule,
+    GalleriesModule,
+    SlidersModule,
+    TeamsModule,
+    MatchesModule,
+    GalleryImagesModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

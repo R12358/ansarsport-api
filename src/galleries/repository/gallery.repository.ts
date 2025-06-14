@@ -7,11 +7,11 @@ import { Injectable } from '@nestjs/common';
 export class GalleryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(updateGalleryDto: UpdateGalleryDto) {
+  async create(createGalleryDto: CreateGalleryDto) {
     const data = {
-      ...updateGalleryDto,
-      publishedAt: updateGalleryDto.publishedAt
-        ? new Date(updateGalleryDto.publishedAt)
+      ...createGalleryDto,
+      publishedAt: createGalleryDto.publishedAt
+        ? new Date(createGalleryDto.publishedAt)
         : new Date(),
     };
     return this.prisma.gallery.create({ data });

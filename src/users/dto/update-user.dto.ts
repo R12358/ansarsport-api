@@ -33,9 +33,7 @@ export class UpdateUserDto {
   @IsOptional()
   address: string;
 
-  @IsString()
-  @MinLength(6)
-  @IsNotEmpty()
+  @IsOptional()
   password: string;
 
   @IsOptional()
