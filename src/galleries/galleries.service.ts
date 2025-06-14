@@ -2,6 +2,13 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { GalleryRepository } from './repository/gallery.repository';
 import { CreateGalleryDto } from './dto/create-gallery.dto';
 import { UpdateGalleryDto } from './dto/update-gallery.dto';
+import { Gallery } from '@prisma/client';
+
+interface FindPaginatedOptions {
+  search?: string;
+  page: number;
+  limit: number;
+}
 
 @Injectable()
 export class GalleriesService {
@@ -11,6 +18,26 @@ export class GalleriesService {
     return this.repo.create(createGalleryDto);
   }
 
+  async findAllPaginated(options: FindPaginatedOptions): Promise<{
+    galleries: Gallery[];
+    totalPages: number;
+    totalCount: number;
+  }> {
+    const { search = '', page = 1, limit = 10 } = options;
+    const allGalleries = await this.repo.findAll();
+    const filtered = allGalleries.filter((gallery) =>
+      `${gallery.id}`.toLowerCase().includes(search.toLocaleLowerCase()),
+    );
+    const total = filtered.length;
+    const totalPages = Math.max(Math.ceil(total / limit), 1);
+    const safePage = Math.min(Math.max(page, 1), totalPages);
+    const paginated = filtered.slice((safePage - 1) * limit, safePage * limit);
+    return {
+      galleries: paginated,
+      totalPages,
+      totalCount: filtered.length,
+    };
+  }
   async findAll() {
     return this.repo.findAll();
   }

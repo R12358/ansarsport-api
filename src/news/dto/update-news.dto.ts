@@ -7,6 +7,7 @@ import {
   IsUrl,
   IsISO8601,
 } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 
 export class UpdateNewsDto {
   @IsString()
@@ -28,18 +29,31 @@ export class UpdateNewsDto {
   publishedAt: string;
 
   @IsInt()
-  @IsOptional() // viewCount اختیاری است و اگر داده نشود به طور پیش‌فرض 0 تنظیم می‌شود
+  @IsOptional()
+  @Type(() => Number)
   viewCount?: number;
 
   @IsBoolean()
-  @IsOptional() // isFeatured اختیاری است و به طور پیش‌فرض false تنظیم می‌شود
+  @IsOptional()
+  @Transform(
+    ({ value }) =>
+      value === 'true' || value === true || value === 1 || value === '1',
+  )
   isFeatured?: boolean;
 
   @IsBoolean()
-  @IsOptional() // isHighlighted اختیاری است و به طور پیش‌فرض false تنظیم می‌شود
+  @IsOptional()
+  @Transform(
+    ({ value }) =>
+      value === 'true' || value === true || value === 1 || value === '1',
+  )
   isHighlighted?: boolean;
 
   @IsBoolean()
-  @IsOptional() // isTopNews اختیاری است و به طور پیش‌فرض false تنظیم می‌شود
+  @IsOptional()
+  @Transform(
+    ({ value }) =>
+      value === 'true' || value === true || value === 1 || value === '1',
+  )
   isTopNews?: boolean;
 }

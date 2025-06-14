@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   BadRequestException,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { SlidersService } from './sliders.service';
 import { CreateSliderDto } from './dto/create-slider.dto';
@@ -19,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UpdateSliderDto } from './dto/update-slider.dto';
 import * as path from 'path';
+import { Slider } from '@prisma/client';
 
 @Controller('sliders')
 export class SlidersController {
@@ -60,8 +62,16 @@ export class SlidersController {
   }
 
   @Get()
-  async findAll() {
-    return this.sliderService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<{ sliders: Slider[]; totalPages: number }> {
+    return this.sliderService.findAllPaginated({
+      search,
+      page: +page,
+      limit: +limit,
+    });
   }
 
   @Get(':id')

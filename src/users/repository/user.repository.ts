@@ -17,6 +17,10 @@ export class UserRepository {
     });
   }
 
+  async findByPhoneNumber(phoneNumber: string) {
+    return this.prisma.user.findFirst({ where: { phoneNumber } });
+  }
+
   async findUserByPhoneNumber(phoneNumber: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { phoneNumber },
@@ -40,6 +44,9 @@ export class UserRepository {
         deletedAt: null,
       },
     });
+  }
+  async findFirst(args: Prisma.UserFindFirstArgs): Promise<User | null> {
+    return this.prisma.user.findFirst(args);
   }
 
   async update(id: number, updateUserDto: Partial<CreateUserDto>) {

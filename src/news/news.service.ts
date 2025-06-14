@@ -2,11 +2,38 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { NewsRepository } from './repository/news.repository';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
+import { News } from '@prisma/client';
+
+interface FindPaginatedOptions {
+  search?: string;
+  page: number;
+  limit: number;
+}
 
 @Injectable()
 export class NewsService {
   constructor(private readonly repo: NewsRepository) {}
 
+  async findAllPaginated(
+    options: FindPaginatedOptions,
+  ): Promise<{ news: News[]; totalPages: number; totalCount: number }> {
+    const { search = '', page = 1, limit = 10 } = options;
+    const allNews = await this.repo.findAll();
+    const filtered = allNews.filter((news) =>
+      `${news.id}`.toLowerCase().includes(search.toLocaleLowerCase()),
+    );
+
+    const total = filtered.length;
+    const totalPages = Math.max(Math.ceil(total / limit), 1);
+    const safePage = Math.min(Math.max(page, 1), totalPages);
+    const paginated = filtered.slice((safePage - 1) * limit, safePage * limit);
+
+    return {
+      news: paginated,
+      totalPages,
+      totalCount: filtered.length,
+    };
+  }
   async create(createNewsDto: CreateNewsDto) {
     const data = {
       ...createNewsDto,

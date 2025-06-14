@@ -9,6 +9,7 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -19,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as path from 'path';
+import { User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -28,8 +30,16 @@ export class UsersController {
   ) {}
 
   @Get()
-  async findAll() {
-    return this.userService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<{ users: User[]; totalPages: number }> {
+    return this.userService.findAllPaginated({
+      search,
+      page: +page,
+      limit: +limit,
+    });
   }
 
   @Get(':id')

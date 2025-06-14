@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import * as path from 'path';
 import { UpdateTeamDto } from './dto/update-team.dto';
+import { Team } from '@prisma/client';
 
 @Controller('teams')
 export class TeamsController {
@@ -56,7 +58,20 @@ export class TeamsController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(
+    @Query('search') search?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<{ teams: Team[]; totalPages: number }> {
+    return this.teamService.findAllPaginated({
+      search,
+      page: +page,
+      limit: +limit,
+    });
+  }
+
+  @Get('all')
+  async findAllTeams() {
     return this.teamService.findAll();
   }
 
@@ -66,6 +81,17 @@ export class TeamsController {
   }
 
   @Patch(':id')
+  @UseInterceptors(
+    FileInterceptor('logoUrl', {
+      storage: diskStorage({
+        destination: './uploads/teams',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = `${uuidv4()}${extname(file.originalname)}`;
+          callback(null, uniqueSuffix);
+        },
+      }),
+    }),
+  )
   async update(
     @Param('id') id: number,
     @Body() updateTeamDto: UpdateTeamDto,

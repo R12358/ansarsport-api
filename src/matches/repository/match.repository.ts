@@ -14,11 +14,19 @@ export class MatchRepository {
   }
 
   async findAll() {
-    return this.prisma.match.findMany();
+    return this.prisma.match.findMany({
+      include: {
+        homeTeam: true,
+        awayTeam: true,
+      },
+    });
   }
 
   async findOne(id: number) {
-    return this.prisma.match.findUnique({ where: { id } });
+    return this.prisma.match.findUnique({
+      where: { id },
+      include: { homeTeam: true, awayTeam: true },
+    });
   }
 
   async update(id: number, updateMatchDto: UpdateMatchDto) {

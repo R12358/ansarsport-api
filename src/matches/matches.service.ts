@@ -8,13 +8,43 @@ import { MatchRepository } from './repository/match.repository';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-
+import { Match } from '@prisma/client';
+interface FindPaginatedOptions {
+  search?: string;
+  page: number;
+  limit: number;
+}
 @Injectable()
 export class MatchesService {
   constructor(
     private readonly repo: MatchRepository,
     private readonly prisma: PrismaService,
   ) {}
+
+  async findAllPaginated(
+    options: FindPaginatedOptions,
+  ): Promise<{ matches: Match[]; totalPages: number; totalCount: number }> {
+    const { search = '', page = 1, limit = 10 } = options;
+
+    const allMatches = await this.repo.findAll();
+
+    const filtered = allMatches.filter((match) =>
+      `${match.id}`.toLowerCase().includes(search.toLowerCase()),
+    );
+
+    const total = filtered.length;
+    const totalPages = Math.max(Math.ceil(total / limit), 1);
+
+    const safePage = Math.min(Math.max(page, 1), totalPages);
+
+    const paginated = filtered.slice((safePage - 1) * limit, safePage * limit);
+
+    return {
+      matches: paginated,
+      totalPages,
+      totalCount: filtered.length,
+    };
+  }
 
   async create(createMatchDto: CreateMatchDto) {
     const { homeTeamId, awayTeamId } = createMatchDto;

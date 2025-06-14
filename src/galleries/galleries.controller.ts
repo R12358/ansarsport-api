@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import { GalleriesService } from './galleries.service';
 import { CreateGalleryDto } from './dto/create-gallery.dto';
 import { UpdateGalleryDto } from './dto/update-gallery.dto';
 import * as path from 'path';
+import { Gallery } from '@prisma/client';
 
 @Controller('galleries')
 export class GalleriesController {
@@ -56,7 +58,20 @@ export class GalleriesController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(
+    @Query('search') search?: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ): Promise<{ galleries: Gallery[]; totalPages: number }> {
+    return this.galleryService.findAllPaginated({
+      search,
+      page: +page,
+      limit: +limit,
+    });
+  }
+
+  @Get('all')
+  async findAllGalleries() {
     return this.galleryService.findAll();
   }
 

@@ -5,15 +5,19 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 import { MatchType } from '@prisma/client';
 
 export class CreateMatchDto {
   @IsInt()
+  @Type(() => Number)
   homeTeamId: number;
 
   @IsInt()
+  @Type(() => Number)
   awayTeamId: number;
 
+  @Transform(({ value }) => new Date(value).toISOString())
   @IsDateString()
   matchDate: string; // تاریخ به صورت string وارد می‌شود که بعداً به Date تبدیل خواهد شد
 
@@ -22,10 +26,12 @@ export class CreateMatchDto {
 
   @IsOptional()
   @IsInt()
+  @Type(() => Number)
   homeScore?: number;
 
   @IsOptional()
   @IsInt()
+  @Type(() => Number)
   awayScore?: number;
 
   @IsOptional()
