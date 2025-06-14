@@ -10,6 +10,7 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -21,6 +22,7 @@ import { extname } from 'path';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as path from 'path';
 import { User } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +31,7 @@ export class UsersController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -42,11 +45,13 @@ export class UsersController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.userService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('avatarUrl', {
@@ -75,6 +80,7 @@ export class UsersController {
     return user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('avatarUrl', {
@@ -114,6 +120,7 @@ export class UsersController {
     return updated;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.userService.remove(id);
