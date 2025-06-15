@@ -8,6 +8,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { CreateVideoDto } from './dto/create-video.dto';
@@ -18,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import * as path from 'path';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('videos')
 export class VideosController {
@@ -26,6 +28,7 @@ export class VideosController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('thumbnailUrl', {
@@ -57,16 +60,19 @@ export class VideosController {
     return video;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return this.videoService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.videoService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('thumbnailUrl', {
@@ -108,6 +114,7 @@ export class VideosController {
     return video;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.videoService.remove(id);
