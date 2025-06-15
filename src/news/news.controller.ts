@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -21,6 +22,7 @@ import { extname } from 'path';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import * as path from 'path';
 import { News } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('news')
 export class NewsController {
@@ -29,6 +31,7 @@ export class NewsController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -57,6 +60,7 @@ export class NewsController {
     return news;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -70,11 +74,13 @@ export class NewsController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.newsService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -113,6 +119,7 @@ export class NewsController {
     return news;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.newsService.remove(id);
