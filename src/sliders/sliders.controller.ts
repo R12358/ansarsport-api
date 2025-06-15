@@ -78,7 +78,6 @@ export class SlidersController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.sliderService.findOne(id);
