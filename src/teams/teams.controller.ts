@@ -9,6 +9,7 @@ import {
   Query,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -21,6 +22,7 @@ import { extname } from 'path';
 import * as path from 'path';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { Team } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('teams')
 export class TeamsController {
@@ -29,6 +31,7 @@ export class TeamsController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('logoUrl', {
@@ -57,6 +60,7 @@ export class TeamsController {
     return team;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -70,16 +74,19 @@ export class TeamsController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('all')
   async findAllTeams() {
     return this.teamService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.teamService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('logoUrl', {
@@ -118,6 +125,7 @@ export class TeamsController {
     return team;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.teamService.remove(id);
