@@ -74,13 +74,11 @@ export class GalleriesController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('all')
   async findAllGalleries() {
     return this.galleryService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(id: number) {
     return this.galleryService.findOne(id);

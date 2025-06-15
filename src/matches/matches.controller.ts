@@ -27,7 +27,6 @@ export class MatchesController {
     return this.matchService.create(createMatchDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.matchService.findOne(id);

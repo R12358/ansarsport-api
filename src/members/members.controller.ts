@@ -39,7 +39,6 @@ export class MembersController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.memberService.findOne(id);

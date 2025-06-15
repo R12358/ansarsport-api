@@ -74,13 +74,11 @@ export class TeamsController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('all')
   async findAllTeams() {
     return this.teamService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.teamService.findOne(id);

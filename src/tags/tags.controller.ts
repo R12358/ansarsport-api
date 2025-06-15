@@ -24,13 +24,11 @@ export class TagsController {
     return this.tagService.create(createTagDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return this.tagService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.tagService.findOne(id);

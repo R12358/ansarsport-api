@@ -45,13 +45,11 @@ export class GalleryImagesController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<GalleryImage> {
     return this.service.findOne(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('all')
   async findAllGalleryImages() {
     return this.service.findAll();
