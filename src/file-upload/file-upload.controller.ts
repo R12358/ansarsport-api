@@ -3,14 +3,17 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('file-upload')
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('slider')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -28,6 +31,7 @@ export class FileUploadController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('team')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -45,6 +49,7 @@ export class FileUploadController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('news')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -62,6 +67,7 @@ export class FileUploadController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('gallery')
   @UseInterceptors(
     FileInterceptor('file', {
