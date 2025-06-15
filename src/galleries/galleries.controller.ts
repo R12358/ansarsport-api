@@ -10,6 +10,7 @@ import {
   Query,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,6 +22,7 @@ import { CreateGalleryDto } from './dto/create-gallery.dto';
 import { UpdateGalleryDto } from './dto/update-gallery.dto';
 import * as path from 'path';
 import { Gallery } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('galleries')
 export class GalleriesController {
@@ -29,6 +31,7 @@ export class GalleriesController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('coverImageUrl', {
@@ -57,6 +60,7 @@ export class GalleriesController {
     return gallery;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -70,16 +74,19 @@ export class GalleriesController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('all')
   async findAllGalleries() {
     return this.galleryService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(id: number) {
     return this.galleryService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('coverImageUrl', {
@@ -119,6 +126,7 @@ export class GalleriesController {
     return updated;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.galleryService.remove(id);
