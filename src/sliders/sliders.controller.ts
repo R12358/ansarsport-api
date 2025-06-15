@@ -10,6 +10,7 @@ import {
   BadRequestException,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { SlidersService } from './sliders.service';
 import { CreateSliderDto } from './dto/create-slider.dto';
@@ -21,6 +22,7 @@ import { extname } from 'path';
 import { UpdateSliderDto } from './dto/update-slider.dto';
 import * as path from 'path';
 import { Slider } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('sliders')
 export class SlidersController {
@@ -29,6 +31,7 @@ export class SlidersController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -61,6 +64,7 @@ export class SlidersController {
     return slider;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -74,11 +78,13 @@ export class SlidersController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.sliderService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -118,6 +124,7 @@ export class SlidersController {
     return updated;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.sliderService.remove(id);
