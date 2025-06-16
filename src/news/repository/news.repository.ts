@@ -12,6 +12,18 @@ export class NewsRepository {
     });
   }
 
+  async findFeaturedNews() {
+    return this.prisma.news.findMany({ where: { isFeatured: true } });
+  }
+
+  async findHighlightedNews() {
+    return this.prisma.news.findMany({ where: { isHighlighted: true } });
+  }
+
+  async findLastestNews() {
+    return this.prisma.news.findMany({ where: { isTopNews: true } });
+  }
+
   async findAll() {
     return this.prisma.news.findMany({ where: { deletedAt: null } });
   }
