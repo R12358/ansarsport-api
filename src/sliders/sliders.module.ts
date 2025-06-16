@@ -13,5 +13,6 @@ import { FileUploadService } from 'src/file-upload/file-upload.service';
     PrismaService,
     FileUploadService,
   ],
+  exports: [SlidersService],
 })
 export class SlidersModule {}

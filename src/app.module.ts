@@ -16,6 +16,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { GalleryImagesModule } from './gallery-images/gallery-images.module';
 import { AuthModule } from './auth/auth.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './auth/auth.module';
     MatchesModule,
     GalleryImagesModule,
     AuthModule,
+    HomeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

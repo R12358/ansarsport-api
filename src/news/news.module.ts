@@ -9,5 +9,6 @@ import { FileUploadModule } from 'src/file-upload/file-upload.module';
   imports: [FileUploadModule],
   controllers: [NewsController],
   providers: [NewsService, NewsRepository, PrismaService],
+  exports: [NewsService],
 })
 export class NewsModule {}
