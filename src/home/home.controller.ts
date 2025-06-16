@@ -19,6 +19,10 @@ export class HomeController {
       this.sliderService.findAll(),
     ]);
 
-    return [news, matches, sliders];
+    return {
+      news: news,
+      matches: matches,
+      sliders: sliders,
+    };
   }
 }
