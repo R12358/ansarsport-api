@@ -7,5 +7,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Module({
   providers: [MatchesService, MatchRepository, PrismaService],
   controllers: [MatchesController],
+  exports: [MatchesService],
 })
 export class MatchesModule {}
