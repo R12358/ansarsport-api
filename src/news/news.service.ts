@@ -14,6 +14,18 @@ interface FindPaginatedOptions {
 export class NewsService {
   constructor(private readonly repo: NewsRepository) {}
 
+  async findFeaturedNews() {
+    return this.repo.findFeaturedNews();
+  }
+
+  async findHighlightedNews() {
+    return this.repo.findHighlightedNews();
+  }
+
+  async findLastestNews() {
+    return this.repo.findLastestNews();
+  }
+
   async findAllPaginated(
     options: FindPaginatedOptions,
   ): Promise<{ news: News[]; totalPages: number; totalCount: number }> {

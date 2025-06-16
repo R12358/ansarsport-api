@@ -31,6 +31,21 @@ export class NewsController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
+  @Get('featured')
+  getFeaturedNews() {
+    return this.newsService.findFeaturedNews();
+  }
+
+  @Get('highlighted')
+  getHighlightedNews() {
+    return this.newsService.findHighlightedNews();
+  }
+
+  @Get('latest')
+  getLatestNews() {
+    return this.newsService.findLastestNews();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
