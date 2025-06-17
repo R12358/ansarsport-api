@@ -8,7 +8,7 @@ import { MatchRepository } from './repository/match.repository';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Match } from '@prisma/client';
+import { Match, MatchType } from '@prisma/client';
 interface FindPaginatedOptions {
   search?: string;
   page: number;
@@ -20,6 +20,10 @@ export class MatchesService {
     private readonly repo: MatchRepository,
     private readonly prisma: PrismaService,
   ) {}
+
+  async findMatchByType(matchType: MatchType) {
+    return this.repo.findMatchByType(matchType);
+  }
 
   async findAllPaginated(
     options: FindPaginatedOptions,

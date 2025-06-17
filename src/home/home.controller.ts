@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { MatchType } from '@prisma/client';
 import { MatchesService } from 'src/matches/matches.service';
 import { NewsService } from 'src/news/news.service';
 import { SlidersService } from 'src/sliders/sliders.service';
@@ -13,16 +14,25 @@ export class HomeController {
 
   @Get()
   async getHomeData() {
-    const [news, matches, sliders] = await Promise.all([
+    const previousMatch = await this.matchesService.findMatchByType(
+      MatchType.PREVIOUS,
+    );
+    const upComingMatch = await this.matchesService.findMatchByType(
+      MatchType.UPCOMING,
+    );
+
+    const [news, sliders] = await Promise.all([
       this.newsService.findAll(),
-      this.matchesService.findAll(),
       this.sliderService.findAll(),
     ]);
 
     return {
       news: news,
-      matches: matches,
       sliders: sliders,
+      highlightedMatches: {
+        previous: previousMatch,
+        upcoming: upComingMatch,
+      },
     };
   }
 }

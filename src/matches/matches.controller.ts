@@ -12,7 +12,7 @@ import {
 import { CreateMatchDto } from './dto/create-match.dto';
 import { MatchesService } from './matches.service';
 import { UpdateMatchDto } from './dto/update-match.dto';
-import { Match } from '@prisma/client';
+import { Match, MatchType } from '@prisma/client';
 import { Logger } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
@@ -25,6 +25,28 @@ export class MatchesController {
   async create(@Body() createMatchDto: CreateMatchDto) {
     Logger.log(`📥 Received DTO: ${JSON.stringify(createMatchDto)}`);
     return this.matchService.create(createMatchDto);
+  }
+
+  @Get('highlighted')
+  async getHighlightedMatches() {
+    const upcoming = await this.matchService.findMatchByType(
+      MatchType.PREVIOUS,
+    );
+    const previous = await this.matchService.findMatchByType(
+      MatchType.UPCOMING,
+    );
+
+    return { previous, upcoming };
+  }
+
+  @Get('previous')
+  async getPreviousMatch() {
+    return this.matchService.findMatchByType(MatchType.PREVIOUS);
+  }
+
+  @Get('upcoming')
+  async getUpComingMatch() {
+    return this.matchService.findMatchByType(MatchType.UPCOMING);
   }
 
   @Get(':id')
