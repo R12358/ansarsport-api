@@ -38,6 +38,10 @@ export class GalleryImagesService {
     return item;
   }
 
+  async findGalleryImagesByGalleryId(galleryId: number) {
+    return this.repo.findGalleryImagesByGalleryId(galleryId);
+  }
+
   async findAllPaginated(options: FindPaginatedOptions): Promise<{
     galleryImages: GalleryImage[];
     totalPages: number;

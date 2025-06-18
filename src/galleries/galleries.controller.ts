@@ -60,7 +60,6 @@ export class GalleriesController {
     return gallery;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,

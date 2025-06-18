@@ -19,6 +19,17 @@ export class GalleryImageRepository {
     });
   }
 
+  async findGalleryImagesByGalleryId(galleryId: number) {
+    return this.prisma.galleryImage.findMany({
+      where: {
+        galleryId: galleryId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
   async findOne(id: number) {
     return this.prisma.galleryImage.findUnique({ where: { id } });
   }

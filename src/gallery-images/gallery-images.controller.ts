@@ -45,6 +45,11 @@ export class GalleryImagesController {
     });
   }
 
+  @Get('by-gallery/:galleryId')
+  async findGalleryImagesByGalleryId(@Param('galleryId') galleryId: number) {
+    return this.service.findGalleryImagesByGalleryId(galleryId);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<GalleryImage> {
     return this.service.findOne(+id);

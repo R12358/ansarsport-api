@@ -21,13 +21,13 @@ export class HomeController {
       MatchType.UPCOMING,
     );
 
-    const [news, sliders] = await Promise.all([
-      this.newsService.findAll(),
+    const [lastestNews, sliders] = await Promise.all([
+      this.newsService.findLastestNews(),
       this.sliderService.findAll(),
     ]);
 
     return {
-      news: news,
+      lastestNews: lastestNews,
       sliders: sliders,
       highlightedMatches: {
         previous: previousMatch,
