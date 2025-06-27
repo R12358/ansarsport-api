@@ -43,6 +43,7 @@ export class UserRepository {
         id,
         deletedAt: null,
       },
+      include: { member: true },
     });
   }
   async findFirst(args: Prisma.UserFindFirstArgs): Promise<User | null> {
