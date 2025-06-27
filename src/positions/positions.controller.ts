@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  
 } from '@nestjs/common';
 import { CreatePositionDto } from './dto/create-position.dto';
 import { PositionsService } from './positions.service';
@@ -23,6 +22,11 @@ export class PositionsController {
 
   @Get()
   async findAll() {
+    return this.positionService.findAll();
+  }
+
+  @Get('all')
+  async findAllPositions() {
     return this.positionService.findAll();
   }
 

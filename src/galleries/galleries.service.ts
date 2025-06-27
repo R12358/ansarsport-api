@@ -58,7 +58,7 @@ export class GalleriesService {
   }
 
   async findOne(id: number) {
-    const gallery = this.findOrFail(id);
+    await this.findOrFail(id);
     return this.repo.findOne(id);
   }
 

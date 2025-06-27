@@ -12,20 +12,41 @@ export class NewsRepository {
     });
   }
 
-  async findFeaturedNews() {
-    return this.prisma.news.findMany({ where: { isFeatured: true } });
+  async findFeaturedNews(limit?: number) {
+    return this.prisma.news.findMany({
+      where: { isFeatured: true, deletedAt: null },
+      ...(limit ? { take: limit } : {}),
+    });
   }
 
-  async findHighlightedNews() {
-    return this.prisma.news.findMany({ where: { isHighlighted: true } });
+  async findHighlightedNews(limit?: number) {
+    return this.prisma.news.findMany({
+      where: { isHighlighted: true, deletedAt: null },
+      ...(limit ? { take: limit } : {}),
+    });
   }
 
-  async findLastestNews() {
-    return this.prisma.news.findMany({ where: { isTopNews: true } });
+  async findLastestNews(limit?: number) {
+    return this.prisma.news.findMany({
+      where: { deletedAt: null },
+      orderBy: { id: 'desc' },
+      ...(limit ? { take: limit } : {}),
+    });
   }
 
-  async findAll() {
-    return this.prisma.news.findMany({ where: { deletedAt: null } });
+  async findTopNews(limit?: number) {
+    return this.prisma.news.findMany({
+      where: { isTopNews: true, deletedAt: null },
+      orderBy: { createdAt: 'asc' },
+      ...(limit ? { take: limit } : {}),
+    });
+  }
+
+  async findAll(limit?: number) {
+    return this.prisma.news.findMany({
+      where: { deletedAt: null },
+      ...(limit ? { take: limit } : {}),
+    });
   }
 
   async findOne(id: number) {

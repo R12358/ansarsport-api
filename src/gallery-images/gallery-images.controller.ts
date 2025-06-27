@@ -30,7 +30,7 @@ export class GalleryImagesController {
     private readonly service: GalleryImagesService,
     private readonly fileUploadService: FileUploadService,
   ) {}
-
+  
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(

@@ -21,13 +21,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as path from 'path';
-import { User } from '@prisma/client';
+import { AgeGroup, User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { MembersService } from 'src/members/members.service';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly userService: UsersService,
+    private readonly memberService: MembersService,
     private readonly fileUploadService: FileUploadService,
   ) {}
 
@@ -50,7 +52,6 @@ export class UsersController {
     return this.userService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('avatarUrl', {
@@ -67,14 +68,46 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @UploadedFile() image?: Express.Multer.File,
   ) {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+      phoneNumber,
+      address,
+      isActive,
+      jerseyNumber,
+      ageGroup,
+      position,
+    } = createUserDto;
+
     const avatarUrl = image
       ? this.fileUploadService.generateFilePath('users', image.filename)
       : null;
 
+    // فقط فیلدهای مربوط به یوزر
     const user = await this.userService.create({
-      ...createUserDto,
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      address,
+      isActive,
+      role,
       avatarUrl,
     });
+
+    // اگر نقش MEMBER بود، اطلاعات خاص عضو را هم ذخیره کن
+    if (role === 'MEMBER') {
+      await this.memberService.create({
+        userId: user.id,
+        jerseyNumber: jerseyNumber ? +jerseyNumber : null,
+        ageGroup: ageGroup as AgeGroup,
+        positionId: +position, // فرض بر اینه که position یک آیدی هست
+      });
+    }
 
     return user;
   }

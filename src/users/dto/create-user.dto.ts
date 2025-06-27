@@ -51,4 +51,13 @@ export class CreateUserDto {
       value === 'true' || value === true || value === 1 || value === '1',
   )
   isActive: boolean;
+
+  @IsOptional()
+  jerseyNumber?: string;
+
+  @IsOptional()
+  ageGroup?: string;
+
+  @IsOptional()
+  position?: string;
 }

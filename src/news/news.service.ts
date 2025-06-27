@@ -14,16 +14,20 @@ interface FindPaginatedOptions {
 export class NewsService {
   constructor(private readonly repo: NewsRepository) {}
 
-  async findFeaturedNews() {
-    return this.repo.findFeaturedNews();
+  async findFeaturedNews(limit?: number) {
+    return this.repo.findFeaturedNews(limit);
   }
 
-  async findHighlightedNews() {
-    return this.repo.findHighlightedNews();
+  async findHighlightedNews(limit?: number) {
+    return this.repo.findHighlightedNews(limit);
   }
 
-  async findLastestNews() {
-    return this.repo.findLastestNews();
+  async findLastestNews(limit?: number) {
+    return this.repo.findLastestNews(limit);
+  }
+
+  async findTopNews(limit?: number) {
+    return this.repo.findTopNews(limit);
   }
 
   async findAllPaginated(
@@ -72,8 +76,8 @@ export class NewsService {
     return news;
   }
 
-  async findAll() {
-    return this.repo.findAll();
+  async findAll(limit?: number) {
+    return this.repo.findAll(limit);
   }
 
   async findOne(id: number) {

@@ -32,18 +32,18 @@ export class NewsController {
   ) {}
 
   @Get('featured')
-  getFeaturedNews() {
-    return this.newsService.findFeaturedNews();
+  getFeaturedNews(@Query('limit') limit?: number) {
+    return this.newsService.findFeaturedNews(limit);
   }
 
   @Get('highlighted')
-  getHighlightedNews() {
-    return this.newsService.findHighlightedNews();
+  getHighlightedNews(@Query('limit') limit?: number) {
+    return this.newsService.findHighlightedNews(limit);
   }
 
   @Get('latest')
-  getLatestNews() {
-    return this.newsService.findLastestNews();
+  getLatestNews(@Query('limit') limit?: number) {
+    return this.newsService.findLastestNews(limit);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -87,6 +87,11 @@ export class NewsController {
       page: +page,
       limit: +limit,
     });
+  }
+
+  @Get('all')
+  async findAllNews(@Query('limit') limit?: number) {
+    return this.newsService.findAll(limit);
   }
 
   @Get(':id')

@@ -79,7 +79,7 @@ export class GalleriesController {
   }
 
   @Get(':id')
-  async findOne(id: number) {
+  async findOne(@Param('id') id: number) {
     return this.galleryService.findOne(id);
   }
 
