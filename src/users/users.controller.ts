@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as path from 'path';
-import { AgeGroup, User } from '@prisma/client';
+import { AgeGroup, User, Position } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { MembersService } from 'src/members/members.service';
 
@@ -105,7 +105,7 @@ export class UsersController {
         userId: user.id,
         jerseyNumber: jerseyNumber ? +jerseyNumber : null,
         ageGroup: ageGroup as AgeGroup,
-        positionId: +position, // فرض بر اینه که position یک آیدی هست
+        position: position as Position, // فرض بر اینه که position یک آیدی هست
       });
     }
 
@@ -130,6 +130,20 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() image?: Express.Multer.File,
   ) {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+      phoneNumber,
+      address,
+      isActive,
+      jerseyNumber,
+      ageGroup,
+      position,
+    } = updateUserDto;
+
     // مرحله ۱: گرفتن اطلاعات قبلی کاربر
     const user = await this.userService.findOne(id);
 
@@ -145,11 +159,39 @@ export class UsersController {
       : undefined;
 
     // مرحله ۴: ذخیره اطلاعات جدید
-    const updated = await this.userService.update(id, {
-      ...updateUserDto,
-      ...(avatarUrl && { avatarUrl }),
+    const updatedUser = await this.userService.update(id, {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      address,
+      isActive,
+      role,
+      avatarUrl,
     });
-    return updated;
+
+    // 5. اگر کاربر از نوع MEMBER بود، اطلاعات Member رو هم آپدیت کن یا بساز
+    if (updatedUser.role === 'MEMBER') {
+      const existingMember = await this.memberService.findByUserId(id);
+      if (existingMember) {
+        // آپدیت
+        await this.memberService.update(existingMember.id, {
+          jerseyNumber: +jerseyNumber,
+          ageGroup: ageGroup as AgeGroup,
+          position: position as Position, // یا مستقیماً اگر enum کردی
+        });
+      } else {
+        // ساخت جدید
+        await this.memberService.create({
+          userId: id,
+          jerseyNumber: +jerseyNumber,
+          ageGroup: ageGroup as AgeGroup,
+          position: position as Position, // یا مستقیماً اگر enum کردی
+        });
+      }
+    }
+    return updatedUser;
   }
 
   @UseGuards(JwtAuthGuard)

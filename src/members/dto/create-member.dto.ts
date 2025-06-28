@@ -8,7 +8,7 @@ import {
   IsEnum,
   IsNotEmpty,
 } from 'class-validator';
-import { AgeGroup } from '@prisma/client';
+import { AgeGroup, Position } from '@prisma/client';
 
 export class CreateMemberDto {
   @IsOptional()
@@ -21,8 +21,9 @@ export class CreateMemberDto {
   @IsEnum(AgeGroup)
   ageGroup?: AgeGroup;
 
-  @IsInt()
-  positionId: number;
+  @IsOptional()
+  @IsEnum(Position)
+  position?: Position;
 
   @IsInt()
   userId: number;

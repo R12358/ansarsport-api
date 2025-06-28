@@ -54,6 +54,9 @@ export class MembersService {
     return this.findMemberOrFail(id);
   }
 
+  async findByUserId(id: number) {
+    return this.repo.findByUserId(id);
+  }
   private async findMemberOrFail(id: number) {
     const member = await this.repo.findOne(id);
     if (!member) {

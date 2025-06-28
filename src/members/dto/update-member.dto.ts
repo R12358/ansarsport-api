@@ -8,7 +8,7 @@ import {
   IsEnum,
   IsNotEmpty,
 } from 'class-validator';
-import { AgeGroup } from '@prisma/client';
+import { AgeGroup, Position } from '@prisma/client';
 
 export class UpdateMemberDto {
   @IsOptional()
@@ -21,9 +21,7 @@ export class UpdateMemberDto {
   @IsEnum(AgeGroup)
   ageGroup?: AgeGroup;
 
-  @IsInt()
-  positionId: number;
-
-  @IsInt()
-  userId: number;
+  @IsOptional()
+  @IsEnum(Position)
+  position?: Position;
 }

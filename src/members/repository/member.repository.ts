@@ -14,7 +14,7 @@ export class MemberRepository {
         jerseyNumber: dto.jerseyNumber,
         ageGroup: dto.ageGroup,
         user: { connect: { id: dto.userId } },
-        position: { connect: { id: dto.positionId } },
+        position: dto.position,
       },
     });
   }
