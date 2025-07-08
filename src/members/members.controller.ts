@@ -25,7 +25,6 @@ export class MembersController {
     return this.memberService.create(createMemberDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -39,6 +38,10 @@ export class MembersController {
     });
   }
 
+  @Get('all')
+  async findAllMembers() {
+    return this.memberService.findAllMembers();
+  }
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.memberService.findOne(id);

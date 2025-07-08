@@ -22,6 +22,7 @@ export class MemberRepository {
   async findById(id: number): Promise<Member | null> {
     return this.prisma.member.findUnique({
       where: { id },
+      include: { user: true },
     });
   }
 
@@ -32,7 +33,10 @@ export class MemberRepository {
   }
 
   async findAll() {
-    return this.prisma.member.findMany({ where: { deletedAt: null } });
+    return this.prisma.member.findMany({
+      where: { deletedAt: null },
+      include: { user: true },
+    });
   }
 
   async findOne(id: number) {
@@ -41,6 +45,7 @@ export class MemberRepository {
         id,
         deletedAt: null,
       },
+      include: { user: true },
     });
   }
 

@@ -50,6 +50,9 @@ export class MembersService {
     };
   }
 
+  async findAllMembers() {
+    return this.repo.findAll();
+  }
   async findOne(id: number) {
     return this.findMemberOrFail(id);
   }
