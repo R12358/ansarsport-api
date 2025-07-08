@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:zXko42$nQaDciRFGo3Qc@ansarsport-db-otk-service:5432/ansarspower_db"
 }
 
 enum Role {
