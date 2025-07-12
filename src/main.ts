@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:3000', // جایی که فرانت اجرا میشه
+    origin: 'http://ansarsport.ir', // جایی که فرانت اجرا میشه
     credentials: true, // اگر از کوکی یا هدر خاص استفاده می‌کنی
   });
 
