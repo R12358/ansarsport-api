@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'https://ansarsport.ir', // دقیق و بدون اسلش آخر
+    origin: 'http://ansarsport.ir', // دقیق و بدون اسلش آخر
     credentials: true,
   });
 
