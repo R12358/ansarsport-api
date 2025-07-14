@@ -13,7 +13,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post('slider')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -31,7 +30,6 @@ export class FileUploadController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('team')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -49,7 +47,6 @@ export class FileUploadController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('news')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -67,7 +64,6 @@ export class FileUploadController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('gallery')
   @UseInterceptors(
     FileInterceptor('file', {

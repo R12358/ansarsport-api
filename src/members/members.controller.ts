@@ -19,7 +19,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class MembersController {
   constructor(private readonly memberService: MembersService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createMemberDto: CreateMemberDto) {
     return this.memberService.create(createMemberDto);
@@ -47,7 +46,6 @@ export class MembersController {
     return this.memberService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -56,7 +54,6 @@ export class MembersController {
     return this.memberService.update(id, updateMemberDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.memberService.remove(id);

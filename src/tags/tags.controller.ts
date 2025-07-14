@@ -18,7 +18,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class TagsController {
   constructor(private readonly tagService: TagsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createTagDto: CreateTagDto) {
     return this.tagService.create(createTagDto);
@@ -34,13 +33,11 @@ export class TagsController {
     return this.tagService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateTagDto: UpdateTagDto) {
     return this.tagService.update(id, updateTagDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.tagService.remove(id);

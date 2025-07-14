@@ -31,7 +31,6 @@ export class GalleriesController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('coverImageUrl', {
@@ -83,7 +82,6 @@ export class GalleriesController {
     return this.galleryService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('coverImageUrl', {
@@ -123,7 +121,6 @@ export class GalleriesController {
     return updated;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.galleryService.remove(id);

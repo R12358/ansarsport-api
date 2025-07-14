@@ -31,7 +31,6 @@ export class GalleryImagesController {
     private readonly fileUploadService: FileUploadService,
   ) {}
   
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,

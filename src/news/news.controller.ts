@@ -46,7 +46,6 @@ export class NewsController {
     return this.newsService.findLastestNews(limit);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -75,7 +74,6 @@ export class NewsController {
     return news;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -99,7 +97,6 @@ export class NewsController {
     return this.newsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -138,7 +135,6 @@ export class NewsController {
     return news;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.newsService.remove(id);

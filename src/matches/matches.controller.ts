@@ -20,7 +20,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class MatchesController {
   constructor(private readonly matchService: MatchesService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createMatchDto: CreateMatchDto) {
     Logger.log(`📥 Received DTO: ${JSON.stringify(createMatchDto)}`);
@@ -54,7 +53,6 @@ export class MatchesController {
     return this.matchService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -68,7 +66,6 @@ export class MatchesController {
     });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -77,7 +74,6 @@ export class MatchesController {
     return this.matchService.update(id, updateMatchDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.matchService.remove(id);

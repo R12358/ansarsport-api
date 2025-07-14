@@ -111,7 +111,6 @@ export class UsersController {
     return user;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('avatarUrl', {
@@ -193,7 +192,6 @@ export class UsersController {
     return updatedUser;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.userService.remove(id);

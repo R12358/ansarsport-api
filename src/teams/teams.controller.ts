@@ -31,7 +31,6 @@ export class TeamsController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('logoUrl', {
@@ -60,7 +59,6 @@ export class TeamsController {
     return team;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -84,7 +82,6 @@ export class TeamsController {
     return this.teamService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('logoUrl', {
@@ -123,7 +120,6 @@ export class TeamsController {
     return team;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.teamService.remove(id);

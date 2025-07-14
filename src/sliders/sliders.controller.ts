@@ -31,7 +31,6 @@ export class SlidersController {
     private readonly fileUploadService: FileUploadService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -64,7 +63,6 @@ export class SlidersController {
     return slider;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -83,7 +81,6 @@ export class SlidersController {
     return this.sliderService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('imageUrl', {
@@ -123,7 +120,6 @@ export class SlidersController {
     return updated;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return this.sliderService.remove(id);
