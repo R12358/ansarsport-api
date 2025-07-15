@@ -27,6 +27,21 @@ export class UserRepository {
     });
   }
 
+  async findById(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+        avatarUrl: true,
+        // چیزای دیگه‌ای که نیاز داری
+      },
+    });
+  }
+
   async findUserByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email },

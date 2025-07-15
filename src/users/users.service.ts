@@ -50,6 +50,10 @@ export class UsersService {
     return this.repo.create(createUserDto);
   }
 
+  async findById(id: number) {
+    const user = await this.repo.findById(id);
+    return user;
+  }
   async findAllPaginated(
     options: FindPaginatedOptions,
   ): Promise<{ users: User[]; totalPages: number; totalCount: number }> {
