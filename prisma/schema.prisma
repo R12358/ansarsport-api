@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:root@localhost:5432/ansarsport?schema=public"
+  url      = "postgresql://postgres:%5EZsmvAM5aTj%26eV%29G@171.22.25.192:5432/ansarsport?schema=public"
 }
 
 enum Role {
