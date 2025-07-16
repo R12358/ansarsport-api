@@ -13,7 +13,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true })); // حتما transform: true باشه
   app.use(cookieParser());
-  await app.listen(3001);
+  await app.listen(4000);
 }
 bootstrap();
 //

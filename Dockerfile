@@ -1,15 +1,13 @@
-# Dockerfile for Next.js frontend
-FROM node:22.14-alpine
+# Base image
+FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
-
+# فقط کپی کردن فایل های آماده شده (شامل node_modules و کد کامپایل شده)
 COPY . .
 
-RUN npm run build
+# ست کردن پورت (مثلا 4000)
+EXPOSE 4000
 
-EXPOSE 3001
-
-CMD ["npm", "start"]
+# اجرای برنامه
+CMD ["node", "dist/main.js"]

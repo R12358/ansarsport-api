@@ -10,7 +10,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: (req) => {
         // بخونه از کوکی به جای هدر
         if (req?.cookies?.token) {
-          console.log('JWT TOKEN FROM COOKIE:', req.cookies.token); // 👈 دیباگ
           return req.cookies.token;
         }
         return null;
