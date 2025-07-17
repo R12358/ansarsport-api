@@ -49,5 +49,9 @@ jobs:
             docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/ansarsport-api:latest
             docker stop ansarsport-api || true
             docker rm ansarsport-api || true
-            docker run -d --name ansarsport-api -p 4000:4000 ghcr.io/${{ secrets.GHCR_USERNAME }}/ansarsport-api:latest
+            docker run -d \
+              --name ansarsport-api \
+              -v /var/www/ansarsport/uploads:/app/uploads \
+              -p 4000:4000 \
+              ghcr.io/${{ secrets.GHCR_USERNAME }}/ansarsport-api:latest
           EOF
