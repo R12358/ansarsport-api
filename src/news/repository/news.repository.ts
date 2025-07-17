@@ -18,7 +18,7 @@ export class NewsRepository {
       ...(limit ? { take: limit } : {}),
     });
   }
-
+z
   async findHighlightedNews(limit?: number) {
     return this.prisma.news.findMany({
       where: { isHighlighted: true, deletedAt: null },
