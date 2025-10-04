@@ -22,7 +22,6 @@ import { extname } from 'path';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import * as path from 'path';
 import { News } from '@prisma/client';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('news')
 export class NewsController {

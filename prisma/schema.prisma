@@ -23,6 +23,7 @@ enum AgeGroup {
   NOJAVANAN
   JAVANAN
   BOZORGSALAN
+  OMID
   KADRE_FANNI
 }
 
