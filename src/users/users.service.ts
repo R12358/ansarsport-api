@@ -158,8 +158,13 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: number) {
+  async softDelete(id: number) {
     const user = await this.findUserOrFail(id);
-    return this.repo.remove(id);
+    return this.repo.softDelete(id);
+  }
+
+  async hardDelete(id: number) {
+    const user = await this.findUserOrFail(id);
+    return this.repo.hardDelete(id);
   }
 }

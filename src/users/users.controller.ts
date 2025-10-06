@@ -192,8 +192,13 @@ export class UsersController {
     return updatedUser;
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: number) {
-    return this.userService.remove(id);
+  @Delete('soft/:id')
+  async softDelete(@Param('id') id: number) {
+    return this.userService.softDelete(id);
+  }
+
+  @Delete('hard/:id')
+  async hardDelete(@Param('id') id: number) {
+    return this.userService.hardDelete(id);
   }
 }

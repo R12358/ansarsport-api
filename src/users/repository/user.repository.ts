@@ -49,7 +49,7 @@ export class UserRepository {
   }
 
   async findAll() {
-    return this.prisma.user.findMany({ where: { deletedAt: null } });
+    return this.prisma.user.findMany();
   }
 
   async findOne(id: number) {
@@ -72,12 +72,22 @@ export class UserRepository {
     });
   }
 
-  async remove(id: number) {
+  async softDelete(id: number) {
     return this.prisma.user.update({
       where: { id },
       data: {
         deletedAt: new Date(),
       },
+    });
+  }
+
+  async hardDelete(id: number) {
+    await this.prisma.member.deleteMany({
+      where: { userId: id },
+    });
+
+    return this.prisma.user.delete({
+      where: { id },
     });
   }
 }
