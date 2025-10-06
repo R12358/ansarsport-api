@@ -56,7 +56,6 @@ export class UserRepository {
     return this.prisma.user.findFirst({
       where: {
         id,
-        deletedAt: null,
       },
       include: { member: true },
     });
@@ -82,12 +81,21 @@ export class UserRepository {
   }
 
   async hardDelete(id: number) {
+    // اول همه رکوردهای مربوط به کاربر توی members رو حذف می‌کنیم
     await this.prisma.member.deleteMany({
       where: { userId: id },
     });
 
-    return this.prisma.user.delete({
+    // بعد کاربر رو حذف می‌کنیم
+    const deletedUser = await this.prisma.user.deleteMany({
       where: { id },
     });
+
+    // اگه هیچ کاربری حذف نشد، یعنی کاربری با این id وجود نداشته
+    if (deletedUser.count === 0) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    return deletedUser;
   }
 }
