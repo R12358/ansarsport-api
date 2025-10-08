@@ -9,19 +9,17 @@ import { Type, Transform } from 'class-transformer';
 import { MatchType } from '@prisma/client';
 
 export class CreateMatchDto {
-  @IsInt()
   @Type(() => Number)
   homeTeamId: number;
 
-  @IsInt()
   @Type(() => Number)
   awayTeamId: number;
 
   @Transform(({ value }) => new Date(value).toISOString())
-  @IsDateString()
+  // @IsDateString()
   matchDate: string; // تاریخ به صورت string وارد می‌شود که بعداً به Date تبدیل خواهد شد
 
-  @IsEnum(MatchType)
+  // @IsEnum(MatchType)
   matchType: MatchType;
 
   @IsOptional()
